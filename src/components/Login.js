@@ -2,44 +2,49 @@ import React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import accounts from "..//account.json"
+import Dash from "./Dash";
 //console.log(accounts.accounts)
-/* accounts.accounts.map((account,index)=>{
-  console.log(index+" "+account.name+"  "+account.password)
-}) */
+ 
 export default function Login() {
   const [data, setData] = useState({
     name: '',
     password: ''
   });
 
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+  };
+
   const changeHandler = (e) => {
-    setData({...data, [e.target.name]: e.target.value})
+    setData({name:e.target.value,password:e.target.name.value})
   }
 
-  const checkUser = () => {
-    const usercheck = accounts.accounts.find(account => (account.name === data.name && account.password === data.password));
+   function checkUser () {
+    const usercheck = accounts.accounts.find(account => (account.username === data.name && account.password === data.password));
+    console.log(data)
     if(usercheck) {
-      console.log("Login successful");
+      <Dash/>
+      debugger
     }else {
-      console.log("Wrong password or username");
+      console.log("red")
     }
     // console.log(uname);
-    console.log(usercheck);
+    //console.log(usercheck);
   }
 
 
   useEffect(() => {
 checkUser(accounts.accounts)
-  }, [data.username, data.password])
+  }, [data.name, data.password])
   return (
     <>
     <div>
-      <Form>
+      <Form onSubmit={handleOnSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Username</Form.Label>
           <Form.Control type="text" 
           placeholder="Username"  
-          value={data.name}
+          
           required
           onChange={changeHandler}
           />
@@ -53,12 +58,12 @@ checkUser(accounts.accounts)
           <Form.Control 
           type="password" 
           placeholder="Password" 
-          value={data.password}
+          name="password"
           required
           onChange={changeHandler}
           />
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" onClick={()=>checkUser()}>
           Submit
         </Button>
       </Form>
